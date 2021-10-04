@@ -5,10 +5,17 @@
  */
 package com.sg.flooringmasteryproject.dao;
 
+import com.sg.flooringmasteryproject.dto.Material;
+import java.util.List;
+
 /**
  *
  * @author roysk93
  */
 public interface FlooringMasteryMaterialDao {
-    
+
+    List<Material> getAllMaterials() throws FlooringMasteryPersistenceException;
+
+    Material getMaterial(String productType) throws FlooringMasteryPersistenceException;
+
 }

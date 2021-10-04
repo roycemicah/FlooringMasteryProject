@@ -5,10 +5,17 @@
  */
 package com.sg.flooringmasteryproject.dao;
 
+import com.sg.flooringmasteryproject.dto.Tax;
+import java.util.List;
+
 /**
  *
  * @author roysk93
  */
 public interface FlooringMasteryTaxDao {
-    
+
+    List<Tax> getTaxes() throws FlooringMasteryPersistenceException;
+
+    Tax getState(String abbreviation) throws FlooringMasteryPersistenceException;
+
 }

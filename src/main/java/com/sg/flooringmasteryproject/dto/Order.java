@@ -13,7 +13,7 @@ import java.math.RoundingMode;
  * @author roysk93
  */
 public class Order {
-    
+
     private int orderNumber;
     private String customerName;
     private String state;
@@ -27,10 +27,10 @@ public class Order {
     private BigDecimal tax;
     private BigDecimal total;
 
-    public Order(String customerName, String state, BigDecimal taxRate, String productType, 
-            BigDecimal area, BigDecimal costPerSquareFoot, BigDecimal labourCostPerSquareFoot, 
+    public Order(String customerName, String state, BigDecimal taxRate, String productType,
+            BigDecimal area, BigDecimal costPerSquareFoot, BigDecimal labourCostPerSquareFoot,
             BigDecimal materialCost, BigDecimal labourCost, BigDecimal tax, BigDecimal total) {
-        
+
         this.customerName = customerName;
         this.state = state;
         this.taxRate = taxRate.setScale(2, RoundingMode.HALF_UP);
@@ -42,8 +42,8 @@ public class Order {
         this.labourCost = labourCost.setScale(2, RoundingMode.HALF_UP);
         this.tax = tax.setScale(2, RoundingMode.HALF_UP);
         this.total = total.setScale(2, RoundingMode.HALF_UP);
+
     }
-    
 
     public int getOrderNumber() {
         return this.orderNumber;
@@ -140,6 +140,5 @@ public class Order {
     public void setTotal(BigDecimal total) {
         this.total = total;
     }
-    
-       
+
 }

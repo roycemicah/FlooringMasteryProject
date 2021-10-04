@@ -10,5 +10,7 @@ package com.sg.flooringmasteryproject.dao;
  * @author roysk93
  */
 public interface FlooringMasteryAuditDao {
-    
+
+    public void writeAuditEntry(String entry) throws FlooringMasteryPersistenceException;
+
 }

@@ -10,11 +10,11 @@ package com.sg.flooringmasteryproject.servicelayer;
  * @author roysk93
  */
 public class OrderNonexistentException extends Exception {
-    
+
     public OrderNonexistentException(String message) {
         super(message);
     }
-    
+
     public OrderNonexistentException(String message, Throwable cause) {
         super(message, cause);
     }

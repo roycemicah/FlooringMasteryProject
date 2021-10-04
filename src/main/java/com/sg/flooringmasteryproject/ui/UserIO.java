@@ -13,7 +13,7 @@ import java.time.LocalDate;
  * @author roysk93
  */
 public interface UserIO {
-    
+
     void print(String message);
 
     String readString(String prompt);
@@ -33,9 +33,9 @@ public interface UserIO {
     long readLong(String prompt);
 
     long readLong(String prompt, long min, long max);
-    
+
     BigDecimal readBigDecimal(String prompt);
-    
+
     LocalDate readLocalDate(String prompt);
-    
+
 }

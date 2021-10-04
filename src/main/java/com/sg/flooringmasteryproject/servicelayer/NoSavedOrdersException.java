@@ -10,13 +10,13 @@ package com.sg.flooringmasteryproject.servicelayer;
  * @author roysk93
  */
 public class NoSavedOrdersException extends Exception {
-    
+
     public NoSavedOrdersException(String message) {
         super(message);
     }
-    
+
     public NoSavedOrdersException(String message, Throwable cause) {
         super(message, cause);
     }
-            
+
 }

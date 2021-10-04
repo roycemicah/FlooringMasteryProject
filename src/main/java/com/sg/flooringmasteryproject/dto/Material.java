@@ -13,15 +13,17 @@ import java.math.RoundingMode;
  * @author roysk93
  */
 public class Material {
-    
+
     private String productType;
     private BigDecimal costPerSquareFoot;
     private BigDecimal labourCostPerSquareFoot;
 
     public Material(String productType, BigDecimal costPerSquareFoot, BigDecimal labourCostPerSquareFoot) {
+
         this.productType = productType;
         this.costPerSquareFoot = costPerSquareFoot.setScale(2, RoundingMode.HALF_UP);
         this.labourCostPerSquareFoot = labourCostPerSquareFoot.setScale(2, RoundingMode.HALF_UP);
+
     }
 
     public String getProductType() {

@@ -6,6 +6,7 @@
 package com.sg.flooringmasteryproject;
 
 import com.sg.flooringmasteryproject.controller.FlooringMasteryController;
+import com.sg.flooringmasteryproject.dao.FlooringMasteryAuditDaoFileImpl;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryMaterialDaoFileImpl;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImpl;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryPersistenceException;
@@ -20,17 +21,16 @@ import com.sg.flooringmasteryproject.ui.UserIOConsoleImpl;
  * @author roysk93
  */
 public class App {
-    
+
     public static void main(String[] args) throws FlooringMasteryPersistenceException {
-        
+
         UserIO io = new UserIOConsoleImpl();
-       
         FlooringMasteryView view = new FlooringMasteryView(io);
-        
         FlooringMasteryOrderDaoFileImpl orderData = new FlooringMasteryOrderDaoFileImpl();
         FlooringMasteryTaxDaoFileImpl taxData = new FlooringMasteryTaxDaoFileImpl();
         FlooringMasteryMaterialDaoFileImpl materialData = new FlooringMasteryMaterialDaoFileImpl();
-        FlooringMasteryServiceLayerFileImpl service = new FlooringMasteryServiceLayerFileImpl(orderData, materialData, taxData);
+        FlooringMasteryAuditDaoFileImpl auditDao = new FlooringMasteryAuditDaoFileImpl();
+        FlooringMasteryServiceLayerFileImpl service = new FlooringMasteryServiceLayerFileImpl(orderData, materialData, taxData, auditDao);
         FlooringMasteryController controller = new FlooringMasteryController(service, view);
         controller.run();
 

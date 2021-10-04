@@ -46,7 +46,7 @@ public class FlooringMasteryController {
         while (keepGoing) {
 
             try {
-                //menuSelection = getMenuSelection();
+
                 menuSelection = view.printMenuAndGetSelection();
                 switch (menuSelection) {
                     case 1:
@@ -75,8 +75,8 @@ public class FlooringMasteryController {
                         BigDecimal area = view.getArea("Enter square ft greater than 100: ");
 
                         Order unconfirmedOrder = serviceLayer.getUnconfirmedOrder(date, orderInfo[0], orderInfo[1], orderInfo[2], area);
-                        
-                        if(view.getConfirmation("Are you sure you want to add this order?", unconfirmedOrder)) {
+
+                        if (view.getConfirmation("Are you sure you want to add this order?", unconfirmedOrder)) {
                             serviceLayer.addOrder(date, orderInfo[0], orderInfo[1], orderInfo[2], area);
                         }
                         break;
@@ -97,10 +97,10 @@ public class FlooringMasteryController {
                         String[] editInfo = view.getEditedOrderInfo(orderToEdit, materials, states);
                         unconfirmedOrder = serviceLayer.getUnconfirmedOrder(date, editInfo[0], editInfo[1], editInfo[2], editedArea,
                                 orderToEdit.getOrderNumber());
-                        
-                        if(view.getConfirmation("Are you sure you want to edit this order?", unconfirmedOrder)) {
+
+                        if (view.getConfirmation("Are you sure you want to edit this order?", unconfirmedOrder)) {
                             serviceLayer.editOrder(date, editInfo[0], editInfo[1], editInfo[2], editedArea,
-                                orderToEdit.getOrderNumber());
+                                    orderToEdit.getOrderNumber());
                         }
 
                     } catch (NoSavedOrdersException | OrderNonexistentException e) {
@@ -112,22 +112,21 @@ public class FlooringMasteryController {
                     //removeOrder();
                         try {
                         date = view.getFutureDate("Enter date to remove order: ");
-                        
+
                         List<Order> orders = serviceLayer.getAllOrders(date);
                         view.displayOrders(orders);
                         int orderNumber = view.getOrderNumberToRemove(orders);
-                                
-                        if(view.getConfirmation("Are you sure you want to remove this order?", 
+
+                        if (view.getConfirmation("Are you sure you want to remove this order?",
                                 serviceLayer.getOrder(date, orderNumber))) {
                             serviceLayer.removeOrder(date, orderNumber);
                         }
-                        
-                        
-                        } catch(NoSavedOrdersException | OrderNonexistentException e) {
-                            view.displayErrorMessage(e.getMessage());
-                        }
-                        break;
-                        
+
+                    } catch (NoSavedOrdersException | OrderNonexistentException e) {
+                        view.displayErrorMessage(e.getMessage());
+                    }
+                    break;
+
                     case 5:
                     //exportAllData();
 
@@ -146,4 +145,5 @@ public class FlooringMasteryController {
         }
 
     }
+
 }

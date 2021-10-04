@@ -5,6 +5,7 @@
  */
 package com.sg.flooringmasteryproject.servicelayer;
 
+import com.sg.flooringmasteryproject.dao.FlooringMasteryAuditDaoFileImpl;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryMaterialDaoFileImpl;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImpl;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryPersistenceException;
@@ -22,19 +23,25 @@ import java.util.List;
  *
  * @author roysk93
  */
-public class FlooringMasteryServiceLayerFileImpl {
+public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServiceLayer {
 
     private FlooringMasteryOrderDaoFileImpl orderDao;
     private FlooringMasteryMaterialDaoFileImpl materialDao;
     private FlooringMasteryTaxDaoFileImpl taxDao;
+    private FlooringMasteryAuditDaoFileImpl auditDao;
 
     public FlooringMasteryServiceLayerFileImpl(FlooringMasteryOrderDaoFileImpl orderDao,
-            FlooringMasteryMaterialDaoFileImpl materialDao, FlooringMasteryTaxDaoFileImpl taxDao) {
+            FlooringMasteryMaterialDaoFileImpl materialDao, FlooringMasteryTaxDaoFileImpl taxDao,
+            FlooringMasteryAuditDaoFileImpl auditDao) {
+
         this.orderDao = orderDao;
         this.materialDao = materialDao;
         this.taxDao = taxDao;
+        this.auditDao = auditDao;
+
     }
 
+    @Override
     public List<Order> getAllOrders(LocalDate date) throws FlooringMasteryPersistenceException, NoSavedOrdersException {
 
         String stringDate = dateToString(date);
@@ -55,6 +62,7 @@ public class FlooringMasteryServiceLayerFileImpl {
 
     }
 
+    @Override
     public Order addOrder(LocalDate date, String stateAbbr, String name, String productType,
             BigDecimal area) throws FlooringMasteryPersistenceException {
 
@@ -83,11 +91,16 @@ public class FlooringMasteryServiceLayerFileImpl {
         Order newOrder = new Order(name, state.getStateAbbr(), state.getTaxRate(),
                 material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(),
                 materialCost, labourCost, tax, total);
+
         newOrder.setOrderNumber(orderNumber);
+
+        auditDao.writeAuditEntry("A new order request has been placed for " + date);
+
         return orderDao.addOrder(newOrder, dateString);
 
     }
 
+    @Override
     public Order editOrder(LocalDate date, String stateAbbr, String name, String productType,
             BigDecimal area, int orderNumber) throws FlooringMasteryPersistenceException,
             OrderNonexistentException {
@@ -117,18 +130,24 @@ public class FlooringMasteryServiceLayerFileImpl {
         orderToEdit.setTax(tax);
         orderToEdit.setTotal(total);
 
+        auditDao.writeAuditEntry("Order number (" + orderNumber + ") was modified!");
+
         return orderDao.editOrder(orderToEdit, dateString);
 
     }
-    
-    public Order removeOrder(LocalDate date, int orderNumber) throws FlooringMasteryPersistenceException, 
+
+    @Override
+    public Order removeOrder(LocalDate date, int orderNumber) throws FlooringMasteryPersistenceException,
             OrderNonexistentException {
+
         String dateString = dateToString(date);
         Order orderToRemove = getOrder(date, orderNumber);
+        auditDao.writeAuditEntry("Order number (" + orderNumber + ") placed for " + date + " removed!");
         return orderDao.removeOrder(dateString, orderNumber);
 
     }
 
+    @Override
     public Order getUnconfirmedOrder(LocalDate date, String stateAbbr, String name, String productType,
             BigDecimal area) throws FlooringMasteryPersistenceException {
 
@@ -149,9 +168,10 @@ public class FlooringMasteryServiceLayerFileImpl {
                 materialCost, labourCost, tax, total);
 
         return unconfirmedOrder;
+
     }
-    
-    
+
+    @Override
     public Order getUnconfirmedOrder(LocalDate date, String stateAbbr, String name, String productType,
             BigDecimal area, int orderNumber) throws FlooringMasteryPersistenceException {
 
@@ -170,12 +190,14 @@ public class FlooringMasteryServiceLayerFileImpl {
         Order unconfirmedOrder = new Order(name, state.getStateAbbr(), state.getTaxRate(),
                 material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(),
                 materialCost, labourCost, tax, total);
-        
+
         unconfirmedOrder.setOrderNumber(orderNumber);
 
         return unconfirmedOrder;
+
     }
 
+    @Override
     public Order getOrder(LocalDate date, int orderNumber) throws OrderNonexistentException {
 
         String dateString = this.dateToString(date);
@@ -192,6 +214,7 @@ public class FlooringMasteryServiceLayerFileImpl {
     }
 
     private int getNextOrderNumber(List<Order> orders) {
+
         int orderNumber = 1;
 
         for (Order order : orders) {
@@ -201,6 +224,7 @@ public class FlooringMasteryServiceLayerFileImpl {
         }
 
         return orderNumber;
+
     }
 
     /*
@@ -212,33 +236,31 @@ public class FlooringMasteryServiceLayerFileImpl {
         orderDao.addOrder(stringDate);
         
     } */
+    @Override
     public Material getMaterial(String material) throws FlooringMasteryPersistenceException {
-
         return materialDao.getMaterial(material);
-
     }
 
+    @Override
     public List<Material> getAllMaterials() throws FlooringMasteryPersistenceException {
         return materialDao.getAllMaterials();
     }
 
+    @Override
     public Tax getState(String stateAbbr) throws FlooringMasteryPersistenceException {
 
         return taxDao.getState(stateAbbr);
 
     }
 
+    @Override
     public List<Tax> getAllStates() throws FlooringMasteryPersistenceException {
-
         return taxDao.getTaxes();
-
     }
 
     private String dateToString(LocalDate date) {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddyyyy");
         return date.format(formatter);
-
     }
 
 }

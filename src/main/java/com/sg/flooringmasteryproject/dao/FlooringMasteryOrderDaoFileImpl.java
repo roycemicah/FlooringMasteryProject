@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public class FlooringMasteryOrderDaoFileImpl {
     
-    private final String DELIMITER = ",";
+    private final String DELIMITER = "::";
     private String fileName;
     private List<Order> orderList = new ArrayList<>();
     

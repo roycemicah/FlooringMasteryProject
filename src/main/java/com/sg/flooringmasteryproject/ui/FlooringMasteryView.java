@@ -17,13 +17,13 @@ import java.util.List;
  * @author roysk93
  */
 public class FlooringMasteryView {
-    
+
     private UserIO io;
-    
+
     public FlooringMasteryView(UserIO io) {
         this.io = io;
     }
-    
+
     public int printMenuAndGetSelection() {
         io.print("<<Flooring Program>>");
         io.print("1. Display Orders");
@@ -32,41 +32,205 @@ public class FlooringMasteryView {
         io.print("4. Remove an Order");
         io.print("5. Export all Data");
         io.print("6. Quit");
-        
+
         return io.readInt("Please select from the above choices. ", 1, 6);
     }
-    
+
     public void displayOrders(List<Order> orders) {
 
         for (Order order : orders) {
-            
-            String orderSummary = order.getOrderNumber() + " " + order.getCustomerName() + " " +
-                    order.getProductType() + " " + order.getTotal();
+
+            String orderSummary = order.getOrderNumber() + " " + order.getCustomerName() + " "
+                    + order.getProductType() + " " + order.getTotal();
 
             io.print(orderSummary);
-            
+
         }
 
     }
-    
+
     public LocalDate getUserDate(String message) {
+        
         LocalDate userDate;
 
         userDate = io.readLocalDate(message);
 
         return userDate;
+        
     }
     
-    public String[] getNewOrderInfo(List<Material> materials, List<Tax> States) {
-        String userName = io.readString("Enter name: ");
-        String stateAbbr = io.readString("Enter state abbreviation (format TX): ");
-        String material = io.readString("Enter material: ");
+    private void printOrderDetails(Order order) {
         
+        if(order.getOrderNumber() != 0) {
+            io.print("Order Number: " + order.getOrderNumber());
+        }
+        
+        io.print("Customer name: " + order.getCustomerName());
+        io.print("Material: " + order.getProductType());
+        io.print("Area in sq ft: " + order.getArea());
+        io.print("Material cost per sq ft: " + order.getCostPerSquareFoot());
+        io.print("Labour cost per sq ft: " + order.getLabourCostPerSquareFoot());
+        io.print("Tax total: " + order.getTax());
+        io.print("Total price: " + order.getTotal());
+        
+    }
+    
+    public int getOrderNumberToRemove(List<Order> orders) {
+        int orderNumber = io.readInt("Enter order number to remove: ");
+        
+        while(! validateOrderNumber(orders, orderNumber)) {
+            orderNumber = io.readInt("Enter a valid order number: ");
+        }
+        
+        return orderNumber;
+    }
+    
+    public boolean getConfirmation(String message, Order order) {
+        printOrderDetails(order);
+        io.print(message);
+        String userResponse = io.readString("Y/N?");
+        
+        if(userResponse.equalsIgnoreCase("Y")) {
+            return true;
+        }
+        return false;
+    }
+    
+    public LocalDate getFutureDate(String message) {
+        
+        LocalDate userDate = io.readLocalDate(message);
+        
+        while(! userDate.isAfter(LocalDate.now())) {
+            userDate = io.readLocalDate("Enter a date in the future: ");
+        }
+        
+        return userDate;
+        
+    }
+
+    public String[] getNewOrderInfo(List<Material> materials, List<Tax> states) {
+        String userName = getValidName();
+
+        displayStates(states);
+        String stateAbbr = null;
+
+        while (stateAbbr == null) {
+            stateAbbr = io.readString("Enter state abbreviation (format TX): ");
+
+            stateAbbr = getValidState(stateAbbr, states);
+
+            if (stateAbbr == null) {
+                displayErrorMessage("Enter an abbreviation for a VALID state");
+            }
+        }
+
+        displayMaterials(materials);
+        String material = null;
+
+        while (material == null) {
+            material = io.readString("Enter desired material: ");
+            material = getValidMaterial(material, materials);
+            
+            if(material == null) {
+                displayErrorMessage("Enter a VALID material: ");
+            }
+        }
+
         String[] resultArray = {stateAbbr, userName, material};
-        
+
         return resultArray;
     }
     
+    private String getValidName() {
+        String name = io.readString("Enter name: ");
+        
+        while(!name.matches("^[A-Za-z0-9,.]+$")) {
+            name = io.readString("Enter a valid name: ");
+        }
+        
+        return name;
+        
+    }
+
+    public String[] getEditedOrderInfo(Order orderToEdit, List<Material> materials,
+            List<Tax> states) {
+
+        io.print("Current name: " + orderToEdit.getCustomerName());
+        String userName = getValidName();
+
+        // this uses the current customer name if the user doesn't enter anything
+        if (userName.isBlank()) {
+            userName = orderToEdit.getCustomerName();
+        }
+
+        io.print("Current state: " + orderToEdit.getState());
+        displayStates(states);
+        String stateAbbr = null;
+
+        while (stateAbbr == null) {
+            stateAbbr = io.readString("Enter state abbreviation (format TX): ");
+
+            if (stateAbbr.isBlank()) {
+                stateAbbr = orderToEdit.getState();
+            } else {
+                stateAbbr = getValidState(stateAbbr, states);
+            }
+
+            if (stateAbbr == null) {
+                displayErrorMessage("Enter an abbreviation for a VALID state");
+            }
+        }
+
+        io.print("Current material: " + orderToEdit.getProductType());
+        displayMaterials(materials);
+        String material = null;
+
+        while (material == null) {
+            material = io.readString("Enter desired material: ");
+
+            if (material.isBlank()) {
+                material = orderToEdit.getProductType();
+            } else {
+                material = getValidMaterial(material, materials);
+            }
+
+        }
+
+        String infoArray[] = {stateAbbr, userName, material};
+
+        return infoArray;
+    }
+
+    public void displayStates(List<Tax> states) {
+
+        String stringStates = "";
+        io.print("Available states: ");
+
+        for (int i = 0; i < states.size(); i++) {
+            if (i == states.size() - 1) {
+                stringStates += states.get(i).getStateAbbr();
+            } else {
+                stringStates += states.get(i).getStateAbbr() + ", ";
+            }
+        }
+        io.print(stringStates);
+    }
+
+    public void displayMaterials(List<Material> materials) {
+
+        String stringMaterials = "";
+        io.print("Available materials: ");
+
+        for (int i = 0; i < materials.size(); i++) {
+            if (i == materials.size() - 1) {
+                stringMaterials += materials.get(i).getProductType();
+            } else {
+                stringMaterials += materials.get(i).getProductType() + ", ";
+            }
+        }
+        io.print(stringMaterials);
+    }
+
     public BigDecimal getArea(String message) {
         BigDecimal area;
 
@@ -77,45 +241,72 @@ public class FlooringMasteryView {
         return area;
 
     }
-    
+
+    public BigDecimal getEditedArea(BigDecimal area) {
+        io.print("Current area: " + area);
+
+        return getArea("Enter new area that is 100 sq ft or greater: ");
+    }
+
+    // looks through the orders for that specific date
     public int getOrderNumberToEdit(List<Order> orders) {
-        
+
         int selection;
-        
+
         do {
             String message = "Enter order number to edit:";
             selection = io.readInt(message);
-        } while(validateOrderNumber(orders, selection));
-        
-        
+        } while (!validateOrderNumber(orders, selection));
+
         return selection;
 
     }
-    
-    public boolean validateOrderNumber(List<Order> orders, int orderNumber) {
-        
-        for(Order order : orders) {
-            
-            if(order.getOrderNumber() == orderNumber) {
+
+    private boolean validateOrderNumber(List<Order> orders, int orderNumber) {
+
+        for (Order order : orders) {
+            if (order.getOrderNumber() == orderNumber) {
                 return true;
             }
-            
         }
-        
+
         return false;
     }
-    
+
+    private String getValidState(String stateAbbr, List<Tax> states) {
+
+        for (Tax state : states) {
+            if (state.getStateAbbr().equals(stateAbbr)) {
+                return stateAbbr;
+            }
+        }
+
+        return null;
+
+    }
+
+    private String getValidMaterial(String materialString, List<Material> materials) {
+
+        for (Material material : materials) {
+            if (material.getProductType().equals(materialString)) {
+                return materialString;
+            }
+        }
+
+        return null;
+    }
+
     public void displayExitBanner() {
         io.print("Good Bye!!!");
     }
-    
+
     public void displayUnknownCommandBanner() {
         io.print("Unknown Command!");
     }
-    
+
     public void displayErrorMessage(String errorMsg) {
         io.print("=== ERROR ===");
         io.print(errorMsg);
     }
-    
+
 }

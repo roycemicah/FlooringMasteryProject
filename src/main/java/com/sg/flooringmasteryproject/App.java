@@ -34,34 +34,6 @@ public class App {
         FlooringMasteryController controller = new FlooringMasteryController(service, view);
         controller.run();
 
-        /*
-        FlooringMasteryOrderDaoFileImpl orderData = new FlooringMasteryOrderDaoFileImpl();
-        List<Order> orderList = orderData.getOrders("06022013");
-        
-        // I'd like to loop through the orderList
-        for(Order item : orderList) {
-            System.out.println(item.getCustomerName() + " " + item.getState() + " " + item.getTotal());
-        }
-        
-        /* 
-        
-        3,Albert Einstein,KY,6.00,Carpet,217.00,2.25,2.10,488.25,455.70,56.64,1000.59
-        
-        
-
-        Order myOrder = new Order(4, "Royce", "NY", new BigDecimal("6.00"), "Carpet", new BigDecimal("217.00"),
-                new BigDecimal("2.25"), new BigDecimal("2.10"), new BigDecimal("488.25"), new BigDecimal("455.70"),
-                new BigDecimal("56.64"), new BigDecimal("1000.59"));
-
-        orderData.addOrder(myOrder, "06022013");
-        
-        FlooringMasteryTaxDaoFileImpl taxData = new FlooringMasteryTaxDaoFileImpl();
-        FlooringMasteryMaterialDaoFileImpl materialData = new FlooringMasteryMaterialDaoFileImpl();
-        
-        System.out.println(taxData.getState("WA").getStateName());
-        
-        System.out.println(materialData.getMaterial("Carpet").getCostPerSquareFoot());
-        */
     }
 
 }

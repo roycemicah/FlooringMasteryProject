@@ -27,11 +27,10 @@ public class Order {
     private BigDecimal tax;
     private BigDecimal total;
 
-    public Order(int orderNumber, String customerName, String state, BigDecimal taxRate, String productType, 
+    public Order(String customerName, String state, BigDecimal taxRate, String productType, 
             BigDecimal area, BigDecimal costPerSquareFoot, BigDecimal labourCostPerSquareFoot, 
             BigDecimal materialCost, BigDecimal labourCost, BigDecimal tax, BigDecimal total) {
         
-        this.orderNumber = orderNumber;
         this.customerName = customerName;
         this.state = state;
         this.taxRate = taxRate.setScale(2, RoundingMode.HALF_UP);
@@ -47,7 +46,7 @@ public class Order {
     
 
     public int getOrderNumber() {
-        return orderNumber;
+        return this.orderNumber;
     }
 
     public void setOrderNumber(int orderNumber) {

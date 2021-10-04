@@ -23,84 +23,186 @@ import java.util.List;
  * @author roysk93
  */
 public class FlooringMasteryServiceLayerFileImpl {
-    
+
     private FlooringMasteryOrderDaoFileImpl orderDao;
     private FlooringMasteryMaterialDaoFileImpl materialDao;
     private FlooringMasteryTaxDaoFileImpl taxDao;
 
-    public FlooringMasteryServiceLayerFileImpl(FlooringMasteryOrderDaoFileImpl orderDao, 
+    public FlooringMasteryServiceLayerFileImpl(FlooringMasteryOrderDaoFileImpl orderDao,
             FlooringMasteryMaterialDaoFileImpl materialDao, FlooringMasteryTaxDaoFileImpl taxDao) {
         this.orderDao = orderDao;
         this.materialDao = materialDao;
         this.taxDao = taxDao;
     }
-    
+
     public List<Order> getAllOrders(LocalDate date) throws FlooringMasteryPersistenceException, NoSavedOrdersException {
-        
+
         String stringDate = dateToString(date);
-        
+
         List<Order> orders;
-        
+
         try {
             orders = orderDao.getOrders(stringDate);
-        } catch(FlooringMasteryPersistenceException e) {
+        } catch (FlooringMasteryPersistenceException e) {
             throw new NoSavedOrdersException("No orders found from this date!", e);
         }
-        
+
+        if (orders.isEmpty()) {
+            throw new NoSavedOrdersException("No orders found from this date!");
+        }
+
         return orders;
 
     }
-    
-    public Order addOrder(LocalDate date, String stateAbbr, String name, String productType, 
+
+    public Order addOrder(LocalDate date, String stateAbbr, String name, String productType,
             BigDecimal area) throws FlooringMasteryPersistenceException {
-        
+
         String dateString = this.dateToString(date);
-        
+
         int orderNumber;
         List<Order> orders;
-        
+
         try {
             orders = this.getAllOrders(date);
             orderNumber = this.getNextOrderNumber(orders);
-        } catch(NoSavedOrdersException e) {
+        } catch (NoSavedOrdersException e) {
             orderNumber = 1;
         }
-        
+
         Tax state = this.getState(stateAbbr);
         Material material = this.getMaterial(productType);
         area = area.setScale(2, RoundingMode.HALF_UP);
-        
+
         BigDecimal materialCost = material.getCostPerSquareFoot().multiply(area);
-        BigDecimal labourCost = material.getLabourCostPerSquareFoot();
-        BigDecimal taxRate = state.getTaxRate().divide(new BigDecimal("100"));
+        BigDecimal labourCost = material.getLabourCostPerSquareFoot().multiply(area);
+        BigDecimal taxRate = state.getTaxRate().divide(new BigDecimal("100").setScale(2, RoundingMode.HALF_UP));
         BigDecimal tax = materialCost.add(labourCost).multiply(taxRate);
         BigDecimal total = materialCost.add(labourCost).add(tax);
-                
-        Order newOrder = new Order(orderNumber, name, state.getStateName(), state.getTaxRate(), 
-                material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(), 
+
+        Order newOrder = new Order(name, state.getStateAbbr(), state.getTaxRate(),
+                material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(),
+                materialCost, labourCost, tax, total);
+        newOrder.setOrderNumber(orderNumber);
+        return orderDao.addOrder(newOrder, dateString);
+
+    }
+
+    public Order editOrder(LocalDate date, String stateAbbr, String name, String productType,
+            BigDecimal area, int orderNumber) throws FlooringMasteryPersistenceException,
+            OrderNonexistentException {
+
+        String dateString = this.dateToString(date);
+
+        Order orderToEdit = this.getOrder(date, orderNumber);
+
+        Tax state = this.getState(stateAbbr);
+        Material material = this.getMaterial(productType);
+        area = area.setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal materialCost = material.getCostPerSquareFoot().multiply(area).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal labourCost = material.getLabourCostPerSquareFoot().multiply(area).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal taxRate = state.getTaxRate().divide(new BigDecimal("100")).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal tax = materialCost.add(labourCost).multiply(taxRate).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal total = materialCost.add(labourCost).add(tax).setScale(2, RoundingMode.HALF_UP);
+
+        orderToEdit.setCustomerName(name);
+        orderToEdit.setProductType(productType);
+        orderToEdit.setArea(area);
+        orderToEdit.setCostPerSquareFoot(material.getCostPerSquareFoot());
+        orderToEdit.setLabourCostPerSquareFoot(material.getLabourCostPerSquareFoot());
+        orderToEdit.setMaterialCost(materialCost);
+        orderToEdit.setLabourCost(labourCost);
+        orderToEdit.setTaxRate(taxRate);
+        orderToEdit.setTax(tax);
+        orderToEdit.setTotal(total);
+
+        return orderDao.editOrder(orderToEdit, dateString);
+
+    }
+    
+    public Order removeOrder(LocalDate date, int orderNumber) throws FlooringMasteryPersistenceException, 
+            OrderNonexistentException {
+        String dateString = dateToString(date);
+        Order orderToRemove = getOrder(date, orderNumber);
+        return orderDao.removeOrder(dateString, orderNumber);
+
+    }
+
+    public Order getUnconfirmedOrder(LocalDate date, String stateAbbr, String name, String productType,
+            BigDecimal area) throws FlooringMasteryPersistenceException {
+
+        String dateString = this.dateToString(date);
+
+        Tax state = this.getState(stateAbbr);
+        Material material = this.getMaterial(productType);
+        area = area.setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal materialCost = material.getCostPerSquareFoot().multiply(area);
+        BigDecimal labourCost = material.getLabourCostPerSquareFoot().multiply(area);
+        BigDecimal taxRate = state.getTaxRate().divide(new BigDecimal("100").setScale(2, RoundingMode.HALF_UP));
+        BigDecimal tax = materialCost.add(labourCost).multiply(taxRate);
+        BigDecimal total = materialCost.add(labourCost).add(tax);
+
+        Order unconfirmedOrder = new Order(name, state.getStateAbbr(), state.getTaxRate(),
+                material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(),
+                materialCost, labourCost, tax, total);
+
+        return unconfirmedOrder;
+    }
+    
+    
+    public Order getUnconfirmedOrder(LocalDate date, String stateAbbr, String name, String productType,
+            BigDecimal area, int orderNumber) throws FlooringMasteryPersistenceException {
+
+        String dateString = this.dateToString(date);
+
+        Tax state = this.getState(stateAbbr);
+        Material material = this.getMaterial(productType);
+        area = area.setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal materialCost = material.getCostPerSquareFoot().multiply(area);
+        BigDecimal labourCost = material.getLabourCostPerSquareFoot().multiply(area);
+        BigDecimal taxRate = state.getTaxRate().divide(new BigDecimal("100").setScale(2, RoundingMode.HALF_UP));
+        BigDecimal tax = materialCost.add(labourCost).multiply(taxRate);
+        BigDecimal total = materialCost.add(labourCost).add(tax);
+
+        Order unconfirmedOrder = new Order(name, state.getStateAbbr(), state.getTaxRate(),
+                material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(),
                 materialCost, labourCost, tax, total);
         
-        return orderDao.addOrder(newOrder, dateString);
-        
+        unconfirmedOrder.setOrderNumber(orderNumber);
+
+        return unconfirmedOrder;
     }
-    
-    public Order getOrder(LocalDate date, int orderNumber) throws FlooringMasteryPersistenceException {
+
+    public Order getOrder(LocalDate date, int orderNumber) throws OrderNonexistentException {
+
         String dateString = this.dateToString(date);
-        return orderDao.getOrder(dateString, orderNumber);
+        Order retrievedOrder = null;
+
+        try {
+            retrievedOrder = orderDao.getOrder(dateString, orderNumber);
+        } catch (FlooringMasteryPersistenceException e) {
+            throw new OrderNonexistentException("Order does not exist!", e);
+        }
+
+        return retrievedOrder;
+
     }
-    
+
     private int getNextOrderNumber(List<Order> orders) {
         int orderNumber = 1;
-        
+
         for (Order order : orders) {
             if (orderNumber >= order.getOrderNumber()) {
                 orderNumber = order.getOrderNumber() + 1;
             }
         }
-        
+
         return orderNumber;
     }
-    
+
     /*
     public Order processOrder(LocalDate date) throws FlooringMasteryPersistenceException {
         
@@ -110,34 +212,33 @@ public class FlooringMasteryServiceLayerFileImpl {
         orderDao.addOrder(stringDate);
         
     } */
-    
     public Material getMaterial(String material) throws FlooringMasteryPersistenceException {
-        
+
         return materialDao.getMaterial(material);
-        
+
     }
-    
+
     public List<Material> getAllMaterials() throws FlooringMasteryPersistenceException {
         return materialDao.getAllMaterials();
     }
-    
+
     public Tax getState(String stateAbbr) throws FlooringMasteryPersistenceException {
-        
+
         return taxDao.getState(stateAbbr);
-        
+
     }
-    
+
     public List<Tax> getAllStates() throws FlooringMasteryPersistenceException {
-        
+
         return taxDao.getTaxes();
-                
+
     }
-    
+
     private String dateToString(LocalDate date) {
-        
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddyyyy");
         return date.format(formatter);
-        
+
     }
 
 }

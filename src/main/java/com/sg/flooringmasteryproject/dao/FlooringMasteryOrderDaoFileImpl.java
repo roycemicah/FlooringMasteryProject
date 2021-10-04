@@ -71,6 +71,22 @@ public class FlooringMasteryOrderDaoFileImpl {
         return order;
     }
     
+    public Order editOrder(Order order, String date) throws FlooringMasteryPersistenceException {
+        
+        this.loadData(date);
+        Order editedOrder = null;
+        
+        for(int i = 0; i < this.orderList.size(); i++) {
+            if(this.orderList.get(i).getOrderNumber() == order.getOrderNumber()) {
+                this.orderList.set(i, order);
+                editedOrder = order;
+                this.writeOrders(date);
+            }
+        }
+        
+        return editedOrder;
+    }
+    
     // this method is reading from the txt file
     private Order unmarshallOrder(String orderData) {
         
@@ -94,9 +110,28 @@ public class FlooringMasteryOrderDaoFileImpl {
         BigDecimal tax = new BigDecimal(fields[10]).setScale(2, RoundingMode.HALF_UP);
         BigDecimal total = new BigDecimal(fields[11]).setScale(2, RoundingMode.HALF_UP);
         
-        return new Order(orderNumber, customerName, state, taxRate, productType, area, costPerSquareFoot, 
+        Order order = new Order(customerName, state, taxRate, productType, area, costPerSquareFoot, 
                          labourCostPerSquareFoot, materialCost, labourCost, tax, total);
+        order.setOrderNumber(orderNumber);
+        
+        return order;
 
+    }
+    
+    public Order removeOrder(String date, int orderNumber) throws FlooringMasteryPersistenceException {
+        loadData(date);
+        Order removedOrder = null;
+        
+        for(Order order : this.orderList) {
+            if(order.getOrderNumber() == orderNumber) {
+                orderList.remove(order);
+                writeOrders(date);
+                return order;
+            }
+        }
+        
+        return removedOrder;
+        
     }
 
     public List<Order> getOrders(String date) throws FlooringMasteryPersistenceException {

@@ -5,11 +5,11 @@
  */
 package com.sg.flooringmasteryproject.servicelayer;
 
-import com.sg.flooringmasteryproject.dao.FlooringMasteryAuditDaoFileImpl;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryMaterialDaoFileImpl;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImpl;
+import com.sg.flooringmasteryproject.dao.FlooringMasteryAuditDao;
+import com.sg.flooringmasteryproject.dao.FlooringMasteryMaterialDao;
+import com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDao;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryPersistenceException;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryTaxDaoFileImpl;
+import com.sg.flooringmasteryproject.dao.FlooringMasteryTaxDao;
 import com.sg.flooringmasteryproject.dto.Material;
 import com.sg.flooringmasteryproject.dto.Order;
 import com.sg.flooringmasteryproject.dto.Tax;
@@ -25,14 +25,14 @@ import java.util.List;
  */
 public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServiceLayer {
 
-    private FlooringMasteryOrderDaoFileImpl orderDao;
-    private FlooringMasteryMaterialDaoFileImpl materialDao;
-    private FlooringMasteryTaxDaoFileImpl taxDao;
-    private FlooringMasteryAuditDaoFileImpl auditDao;
+    private FlooringMasteryOrderDao orderDao;
+    private FlooringMasteryMaterialDao materialDao;
+    private FlooringMasteryTaxDao taxDao;
+    private FlooringMasteryAuditDao auditDao;
 
-    public FlooringMasteryServiceLayerFileImpl(FlooringMasteryOrderDaoFileImpl orderDao,
-            FlooringMasteryMaterialDaoFileImpl materialDao, FlooringMasteryTaxDaoFileImpl taxDao,
-            FlooringMasteryAuditDaoFileImpl auditDao) {
+    public FlooringMasteryServiceLayerFileImpl(FlooringMasteryOrderDao orderDao,
+            FlooringMasteryMaterialDao materialDao, FlooringMasteryTaxDao taxDao,
+            FlooringMasteryAuditDao auditDao) {
 
         this.orderDao = orderDao;
         this.materialDao = materialDao;
@@ -78,19 +78,7 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
             orderNumber = 1;
         }
 
-        Tax state = this.getState(stateAbbr);
-        Material material = this.getMaterial(productType);
-        area = area.setScale(2, RoundingMode.HALF_UP);
-
-        BigDecimal materialCost = material.getCostPerSquareFoot().multiply(area);
-        BigDecimal labourCost = material.getLabourCostPerSquareFoot().multiply(area);
-        BigDecimal taxRate = state.getTaxRate().divide(new BigDecimal("100").setScale(2, RoundingMode.HALF_UP));
-        BigDecimal tax = materialCost.add(labourCost).multiply(taxRate);
-        BigDecimal total = materialCost.add(labourCost).add(tax);
-
-        Order newOrder = new Order(name, state.getStateAbbr(), state.getTaxRate(),
-                material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(),
-                materialCost, labourCost, tax, total);
+        Order newOrder = createOrder(stateAbbr, name, productType, area);
 
         newOrder.setOrderNumber(orderNumber);
 
@@ -103,7 +91,7 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
     @Override
     public Order editOrder(LocalDate date, String stateAbbr, String name, String productType,
             BigDecimal area, int orderNumber) throws FlooringMasteryPersistenceException,
-            OrderNonexistentException {
+            OrderNonexistentException, NoSavedOrdersException {
 
         String dateString = this.dateToString(date);
 
@@ -115,8 +103,8 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
 
         BigDecimal materialCost = material.getCostPerSquareFoot().multiply(area).setScale(2, RoundingMode.HALF_UP);
         BigDecimal labourCost = material.getLabourCostPerSquareFoot().multiply(area).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal taxRate = state.getTaxRate().divide(new BigDecimal("100")).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal tax = materialCost.add(labourCost).multiply(taxRate).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal taxRate = state.getTaxRate().setScale(2, RoundingMode.HALF_UP);
+        BigDecimal tax = materialCost.add(labourCost).multiply(taxRate.divide(new BigDecimal("100")));
         BigDecimal total = materialCost.add(labourCost).add(tax).setScale(2, RoundingMode.HALF_UP);
 
         orderToEdit.setCustomerName(name);
@@ -130,7 +118,7 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
         orderToEdit.setTax(tax);
         orderToEdit.setTotal(total);
 
-        auditDao.writeAuditEntry("Order number (" + orderNumber + ") was modified!");
+        auditDao.writeAuditEntry("Order number (" + orderNumber + ") for " + date + " was modified!");
 
         return orderDao.editOrder(orderToEdit, dateString);
 
@@ -138,12 +126,32 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
 
     @Override
     public Order removeOrder(LocalDate date, int orderNumber) throws FlooringMasteryPersistenceException,
-            OrderNonexistentException {
+            OrderNonexistentException, NoSavedOrdersException {
 
         String dateString = dateToString(date);
         Order orderToRemove = getOrder(date, orderNumber);
         auditDao.writeAuditEntry("Order number (" + orderNumber + ") placed for " + date + " removed!");
         return orderDao.removeOrder(dateString, orderNumber);
+
+    }
+
+    private Order createOrder(String stateAbbr, String name, String productType, BigDecimal area) throws FlooringMasteryPersistenceException {
+
+        Tax state = this.getState(stateAbbr);
+        Material material = this.getMaterial(productType);
+        area = area.setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal materialCost = material.getCostPerSquareFoot().multiply(area);
+        BigDecimal labourCost = material.getLabourCostPerSquareFoot().multiply(area);
+        BigDecimal taxRate = state.getTaxRate().setScale(2, RoundingMode.HALF_UP);
+        BigDecimal tax = materialCost.add(labourCost).multiply(taxRate.divide(new BigDecimal("100")));
+        BigDecimal total = materialCost.add(labourCost).add(tax);
+
+        Order order = new Order(name, state.getStateAbbr(), state.getTaxRate(),
+                material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(),
+                materialCost, labourCost, tax, total);
+        
+        return order;
 
     }
 
@@ -153,19 +161,7 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
 
         String dateString = this.dateToString(date);
 
-        Tax state = this.getState(stateAbbr);
-        Material material = this.getMaterial(productType);
-        area = area.setScale(2, RoundingMode.HALF_UP);
-
-        BigDecimal materialCost = material.getCostPerSquareFoot().multiply(area);
-        BigDecimal labourCost = material.getLabourCostPerSquareFoot().multiply(area);
-        BigDecimal taxRate = state.getTaxRate().divide(new BigDecimal("100").setScale(2, RoundingMode.HALF_UP));
-        BigDecimal tax = materialCost.add(labourCost).multiply(taxRate);
-        BigDecimal total = materialCost.add(labourCost).add(tax);
-
-        Order unconfirmedOrder = new Order(name, state.getStateAbbr(), state.getTaxRate(),
-                material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(),
-                materialCost, labourCost, tax, total);
+        Order unconfirmedOrder = createOrder(stateAbbr, name, productType, area);
 
         return unconfirmedOrder;
 
@@ -177,19 +173,7 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
 
         String dateString = this.dateToString(date);
 
-        Tax state = this.getState(stateAbbr);
-        Material material = this.getMaterial(productType);
-        area = area.setScale(2, RoundingMode.HALF_UP);
-
-        BigDecimal materialCost = material.getCostPerSquareFoot().multiply(area);
-        BigDecimal labourCost = material.getLabourCostPerSquareFoot().multiply(area);
-        BigDecimal taxRate = state.getTaxRate().divide(new BigDecimal("100").setScale(2, RoundingMode.HALF_UP));
-        BigDecimal tax = materialCost.add(labourCost).multiply(taxRate);
-        BigDecimal total = materialCost.add(labourCost).add(tax);
-
-        Order unconfirmedOrder = new Order(name, state.getStateAbbr(), state.getTaxRate(),
-                material.getProductType(), area, material.getCostPerSquareFoot(), material.getLabourCostPerSquareFoot(),
-                materialCost, labourCost, tax, total);
+        Order unconfirmedOrder = createOrder(stateAbbr, name, productType, area);
 
         unconfirmedOrder.setOrderNumber(orderNumber);
 
@@ -198,7 +182,8 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
     }
 
     @Override
-    public Order getOrder(LocalDate date, int orderNumber) throws OrderNonexistentException {
+    public Order getOrder(LocalDate date, int orderNumber) throws NoSavedOrdersException, 
+            OrderNonexistentException {
 
         String dateString = this.dateToString(date);
         Order retrievedOrder = null;
@@ -206,7 +191,11 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
         try {
             retrievedOrder = orderDao.getOrder(dateString, orderNumber);
         } catch (FlooringMasteryPersistenceException e) {
-            throw new OrderNonexistentException("Order does not exist!", e);
+            throw new NoSavedOrdersException("No orders exist for this date!", e);
+        }
+        
+        if(retrievedOrder == null) {
+            throw new OrderNonexistentException("Order does not exist!");
         }
 
         return retrievedOrder;
@@ -227,15 +216,6 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
 
     }
 
-    /*
-    public Order processOrder(LocalDate date) throws FlooringMasteryPersistenceException {
-        
-        Order newOrder = new Order
-        
-        String stringDate = dateToString(date);
-        orderDao.addOrder(stringDate);
-        
-    } */
     @Override
     public Material getMaterial(String material) throws FlooringMasteryPersistenceException {
         return materialDao.getMaterial(material);

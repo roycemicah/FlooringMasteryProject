@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -26,14 +27,22 @@ import java.util.stream.Collectors;
 public class FlooringMasteryOrderDaoFileImpl implements FlooringMasteryOrderDao {
 
     private final String DELIMITER = "::";
-    private String fileName;
+    private String filePrefix;
     private final List<Order> orderList = new ArrayList<>();
+
+    public FlooringMasteryOrderDaoFileImpl(String filePrefix) {
+        this.filePrefix = filePrefix;
+    }
+
+    public FlooringMasteryOrderDaoFileImpl() {
+        this.filePrefix = "Orders/Orders_";
+    }
 
     private void loadData(String date) throws FlooringMasteryPersistenceException {
 
         Scanner sc;
 
-        fileName = "Orders/Orders_" + date + ".txt";
+        String fileName = this.filePrefix + date + ".txt";
         orderList.clear();
 
         try {
@@ -144,7 +153,12 @@ public class FlooringMasteryOrderDaoFileImpl implements FlooringMasteryOrderDao 
     public Order getOrder(String dateString, int orderNumber) throws FlooringMasteryPersistenceException {
 
         this.loadData(dateString);
-        return this.orderList.stream().filter((p) -> p.getOrderNumber() == orderNumber).findFirst().get();
+        
+        try {
+            return this.orderList.stream().filter((p) -> p.getOrderNumber() == orderNumber).findFirst().get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
 
     }
 
@@ -153,7 +167,7 @@ public class FlooringMasteryOrderDaoFileImpl implements FlooringMasteryOrderDao 
         PrintWriter out;
 
         try {
-            out = new PrintWriter(new FileWriter("Orders/Orders_" + date + ".txt"));
+            out = new PrintWriter(new FileWriter(this.filePrefix + date + ".txt"));
         } catch (IOException e) {
             throw new FlooringMasteryPersistenceException("Could not persist data!", e);
         }

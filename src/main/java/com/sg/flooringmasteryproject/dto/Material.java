@@ -7,6 +7,7 @@ package com.sg.flooringmasteryproject.dto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 /**
  *
@@ -40,6 +41,44 @@ public class Material {
 
     public BigDecimal getLabourCostPerSquareFoot() {
         return labourCostPerSquareFoot;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.productType);
+        hash = 97 * hash + Objects.hashCode(this.costPerSquareFoot);
+        hash = 97 * hash + Objects.hashCode(this.labourCostPerSquareFoot);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Material other = (Material) obj;
+        if (!Objects.equals(this.productType, other.productType)) {
+            return false;
+        }
+        if (!Objects.equals(this.costPerSquareFoot, other.costPerSquareFoot)) {
+            return false;
+        }
+        if (!Objects.equals(this.labourCostPerSquareFoot, other.labourCostPerSquareFoot)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Material{" + "productType=" + productType + ", costPerSquareFoot=" + costPerSquareFoot + ", labourCostPerSquareFoot=" + labourCostPerSquareFoot + '}';
     }
 
 }

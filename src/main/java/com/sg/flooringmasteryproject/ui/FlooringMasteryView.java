@@ -42,7 +42,7 @@ public class FlooringMasteryView {
 
         for (Order order : orders) {
             String orderSummary = order.getOrderNumber() + " " + order.getCustomerName() + " "
-                    + order.getProductType() + " " + order.getTotal();
+                    + order.getProductType() + " $" + order.getTotal();
 
             io.print(orderSummary);
         }
@@ -67,10 +67,10 @@ public class FlooringMasteryView {
         io.print("Customer name: " + order.getCustomerName());
         io.print("Material: " + order.getProductType());
         io.print("Area in sq ft: " + order.getArea());
-        io.print("Material cost per sq ft: " + order.getCostPerSquareFoot());
-        io.print("Labour cost per sq ft: " + order.getLabourCostPerSquareFoot());
-        io.print("Tax total: " + order.getTax());
-        io.print("Total price: " + order.getTotal());
+        io.print("Material cost per sq ft: $" + order.getCostPerSquareFoot());
+        io.print("Labour cost per sq ft: $" + order.getLabourCostPerSquareFoot());
+        io.print("Tax total: $" + order.getTax());
+        io.print("Total price: $" + order.getTotal());
 
     }
 

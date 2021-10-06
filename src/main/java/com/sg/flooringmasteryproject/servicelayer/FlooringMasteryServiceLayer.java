@@ -26,10 +26,10 @@ public interface FlooringMasteryServiceLayer {
 
     Order editOrder(LocalDate date, String stateAbbr, String name, String productType,
             BigDecimal area, int orderNumber) throws FlooringMasteryPersistenceException,
-            OrderNonexistentException;
+            OrderNonexistentException, NoSavedOrdersException;
 
     Order removeOrder(LocalDate date, int orderNumber) throws FlooringMasteryPersistenceException,
-            OrderNonexistentException;
+            OrderNonexistentException, NoSavedOrdersException;
 
     Order getUnconfirmedOrder(LocalDate date, String stateAbbr, String name, String productType,
             BigDecimal area) throws FlooringMasteryPersistenceException;
@@ -37,7 +37,7 @@ public interface FlooringMasteryServiceLayer {
     Order getUnconfirmedOrder(LocalDate date, String stateAbbr, String name, String productType,
             BigDecimal area, int orderNumber) throws FlooringMasteryPersistenceException;
 
-    Order getOrder(LocalDate date, int orderNumber) throws OrderNonexistentException;
+    Order getOrder(LocalDate date, int orderNumber) throws OrderNonexistentException, NoSavedOrdersException;
 
     Material getMaterial(String material) throws FlooringMasteryPersistenceException;
 

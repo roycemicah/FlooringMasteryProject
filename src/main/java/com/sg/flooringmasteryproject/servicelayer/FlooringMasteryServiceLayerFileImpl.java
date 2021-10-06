@@ -25,10 +25,10 @@ import java.util.List;
  */
 public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServiceLayer {
 
-    private FlooringMasteryOrderDao orderDao;
-    private FlooringMasteryMaterialDao materialDao;
-    private FlooringMasteryTaxDao taxDao;
-    private FlooringMasteryAuditDao auditDao;
+    private final FlooringMasteryOrderDao orderDao;
+    private final FlooringMasteryMaterialDao materialDao;
+    private final FlooringMasteryTaxDao taxDao;
+    private final FlooringMasteryAuditDao auditDao;
 
     public FlooringMasteryServiceLayerFileImpl(FlooringMasteryOrderDao orderDao,
             FlooringMasteryMaterialDao materialDao, FlooringMasteryTaxDao taxDao,

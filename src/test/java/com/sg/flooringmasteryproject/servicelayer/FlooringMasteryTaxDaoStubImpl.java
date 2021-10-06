@@ -18,19 +18,19 @@ import java.util.List;
  * @author roysk93
  */
 public class FlooringMasteryTaxDaoStubImpl implements FlooringMasteryTaxDao {
-    
+
     public Tax onlyState;
-    
+
     public FlooringMasteryTaxDaoStubImpl() {
-        
+
         String stateAbbr = "FL";
         String stateName = "Florida";
         BigDecimal taxRate = new BigDecimal("4.45").setScale(2, RoundingMode.HALF_UP);
-        
+
         onlyState = new Tax(stateAbbr, stateName, taxRate);
 
     }
-    
+
     public FlooringMasteryTaxDaoStubImpl(Tax testState) {
         this.onlyState = testState;
     }
@@ -44,12 +44,12 @@ public class FlooringMasteryTaxDaoStubImpl implements FlooringMasteryTaxDao {
 
     @Override
     public Tax getState(String abbreviation) throws FlooringMasteryPersistenceException {
-        
-        if(abbreviation.equals(onlyState.getStateAbbr())) {
+
+        if (abbreviation.equals(onlyState.getStateAbbr())) {
             return onlyState;
         } else {
             return null;
         }
     }
-    
+
 }

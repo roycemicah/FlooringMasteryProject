@@ -24,7 +24,6 @@ import java.util.List;
 public class FlooringMasteryController {
 
     private FlooringMasteryView view;
-
     private FlooringMasteryServiceLayer serviceLayer;
 
     public FlooringMasteryController(FlooringMasteryServiceLayer serviceLayer,
@@ -71,29 +70,6 @@ public class FlooringMasteryController {
 
                     case 3:
                         editOrder(materials, states);
-                        /*
-                        try {
-
-                        date = view.getFutureDate("Enter date to edit order: ");
-
-                        List<Order> orders = serviceLayer.getAllOrders(date);
-                        view.displayOrders(orders);
-
-                        Order orderToEdit = serviceLayer.getOrder(date, view.getOrderNumberToEdit(orders));
-                        BigDecimal editedArea = view.getEditedArea(orderToEdit.getArea());
-
-                        String[] editInfo = view.getEditedOrderInfo(orderToEdit, materials, states);
-                        unconfirmedOrder = serviceLayer.getUnconfirmedOrder(date, editInfo[0], editInfo[1], editInfo[2], editedArea,
-                                orderToEdit.getOrderNumber());
-
-                        if (view.getConfirmation("Are you sure you want to edit this order?", unconfirmedOrder)) {
-                            serviceLayer.editOrder(date, editInfo[0], editInfo[1], editInfo[2], editedArea,
-                                    orderToEdit.getOrderNumber());
-                        }
-
-                    } catch (NoSavedOrdersException | OrderNonexistentException e) {
-                        view.displayErrorMessage(e.getMessage());
-                    } */
                         break;
 
                     case 4:

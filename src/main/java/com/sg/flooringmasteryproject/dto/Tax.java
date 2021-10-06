@@ -15,9 +15,9 @@ import java.util.Objects;
  */
 public class Tax {
 
-    private String stateAbbr;
-    private String stateName;
-    private BigDecimal taxRate;
+    private final String stateAbbr;
+    private final String stateName;
+    private final BigDecimal taxRate;
 
     public Tax(String stateAbbr, String stateName, BigDecimal taxRate) {
 

@@ -64,7 +64,6 @@ public class FlooringMasteryOrderDaoFileImpl implements FlooringMasteryOrderDao 
 
     @Override
     public Order addOrder(Order order, String date) throws FlooringMasteryPersistenceException {
-        // clears and loads new data
 
         try {
             this.loadData(date);
@@ -153,7 +152,7 @@ public class FlooringMasteryOrderDaoFileImpl implements FlooringMasteryOrderDao 
     public Order getOrder(String dateString, int orderNumber) throws FlooringMasteryPersistenceException {
 
         this.loadData(dateString);
-        
+
         try {
             return this.orderList.stream().filter((p) -> p.getOrderNumber() == orderNumber).findFirst().get();
         } catch (NoSuchElementException e) {

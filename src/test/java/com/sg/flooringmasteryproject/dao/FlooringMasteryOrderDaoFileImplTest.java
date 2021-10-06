@@ -91,7 +91,6 @@ public class FlooringMasteryOrderDaoFileImplTest {
         BigDecimal tax = new BigDecimal("27.81").setScale(2, RoundingMode.HALF_UP);
         BigDecimal total = new BigDecimal("652.81").setScale(2, RoundingMode.HALF_UP);
 
-        // edited DAO
         String editedCustomerName = "Charles";
         String editedState = "NY";
         BigDecimal editedTaxRate = new BigDecimal("5.00").setScale(2, RoundingMode.HALF_UP);
@@ -189,10 +188,10 @@ public class FlooringMasteryOrderDaoFileImplTest {
         new FileWriter(testFilePrefix + testDate + ".txt");
 
     }
-    
+
     @Test
     public void testRemoveOrder() throws Exception {
-        
+
         int firstOrderNumber = 1;
         String firstCustomerName = "Ada";
         String firstState = "FL";
@@ -231,33 +230,33 @@ public class FlooringMasteryOrderDaoFileImplTest {
         String testDate = "10102021";
         testDao.addOrder(firstOrder, testDate);
         testDao.addOrder(secondOrder, testDate);
-        
+
         Order removedOrder = testDao.removeOrder(testDate, firstOrderNumber);
-        
+
         assertEquals(removedOrder, firstOrder, "The removed order should be first order.");
-        
+
         List<Order> orders = testDao.getOrders(testDate);
-        
+
         assertNotNull(orders, "All orders should be not null.");
         assertEquals(1, orders.size(), "All orders should only have 1 order.");
-        
+
         assertFalse(orders.contains(firstOrder), "All orders should NOT include first order.");
         assertTrue(orders.contains(secondOrder), "All orders should include second order.");
-        
+
         removedOrder = testDao.removeOrder(testDate, secondOrderNumber);
-        
+
         assertEquals(removedOrder, secondOrder, "The removed order should be second order.");
-        
+
         orders = testDao.getOrders(testDate);
-        
+
         assertTrue(orders.isEmpty(), "The retrieved list of orders should be empty.");
-        
+
         Order retrievedOrder = testDao.getOrder(testDate, firstOrderNumber);
         assertNull(retrievedOrder, "First order was removed, should be null.");
-        
+
         retrievedOrder = testDao.getOrder(testDate, secondOrderNumber);
         assertNull(retrievedOrder, "Second order was removed, should be null.");
-        
+
     }
 
 }

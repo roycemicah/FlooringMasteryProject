@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class FlooringMasteryView {
 
-    private UserIO io;
+    private final UserIO io;
 
     public FlooringMasteryView(UserIO io) {
         this.io = io;
@@ -31,10 +31,9 @@ public class FlooringMasteryView {
         io.print("2. Add an Order");
         io.print("3. Edit an Order");
         io.print("4. Remove an Order");
-        io.print("5. Export all Data");
-        io.print("6. Quit");
+        io.print("5. Quit");
 
-        return io.readInt("Please select from the above choices. ", 1, 6);
+        return io.readInt("Please select from the above choices. ", 1, 5);
 
     }
 
@@ -318,9 +317,33 @@ public class FlooringMasteryView {
 
         return null;
     }
+    
+    public void displayOrderAddedBanner(Order addedOrder) {
+        io.print("Order No. " + addedOrder.getOrderNumber() + " added successfully!");
+    }
+    
+    public void displayOrderNotAdded() {
+        io.print("Order not added!");
+    }
+    
+    public void displayOrderEditedBanner(int orderNumber) {
+        io.print("Order No. " + orderNumber + " successfully edited!");
+    }
+    
+    public void displayCancelEditOrder() {
+        io.print("Cancelled editing order!");
+    }
+    
+    public void displayRemoveOrderBanner(int orderNumber) {
+        io.print("Order No. " + orderNumber + " successfully removed!");
+    }
+    
+    public void displayCancelRemoveOrder() {
+        io.print("Remove order cancelled!");
+    }
 
     public void displayExitBanner() {
-        io.print("Good Bye!!!");
+        io.print("Good Bye!");
     }
 
     public void displayUnknownCommandBanner() {

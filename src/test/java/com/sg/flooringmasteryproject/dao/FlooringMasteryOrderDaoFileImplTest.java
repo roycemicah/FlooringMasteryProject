@@ -49,8 +49,7 @@ public class FlooringMasteryOrderDaoFileImplTest {
         BigDecimal total = new BigDecimal("652.81").setScale(2, RoundingMode.HALF_UP);
 
         Order testOrder = new Order(customerName, state, taxRate, productType,
-                area, costPerSquareFoot, labourCostPerSquareFoot, materialCost, labourCost, tax, total) {
-        };
+                area, costPerSquareFoot, labourCostPerSquareFoot, materialCost, labourCost, tax, total);
 
         testOrder.setOrderNumber(orderNumber);
         String testDate = "10102021";

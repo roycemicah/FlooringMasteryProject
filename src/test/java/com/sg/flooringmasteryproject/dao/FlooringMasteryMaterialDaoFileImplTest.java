@@ -5,19 +5,43 @@
  */
 package com.sg.flooringmasteryproject.dao;
 
+import com.sg.flooringmasteryproject.dto.Material;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author roysk93
  */
 public class FlooringMasteryMaterialDaoFileImplTest {
-    
+
+    FlooringMasteryMaterialDao testDao;
+
     public FlooringMasteryMaterialDaoFileImplTest() {
     }
 
     @BeforeEach
-    public void setUp() {
+    public void setUpClass() throws Exception {
+
+        testDao = new FlooringMasteryMaterialDaoFileImpl();
+
+    }
+
+    @Test
+    public void testGetMaterial() throws Exception {
+
+        List<Material> materials = testDao.getAllMaterials();
+
+        for (Material material : materials) {
+
+            Material retrievedMaterial = testDao.getMaterial(material.getProductType());
+            assertEquals(material, retrievedMaterial, "Retrieved material must equal object in materials.");
+
+        }
+
     }
 
 }

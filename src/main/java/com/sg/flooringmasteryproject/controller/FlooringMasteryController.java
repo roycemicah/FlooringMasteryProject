@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class FlooringMasteryController {
 
-    private FlooringMasteryView view;
-    private FlooringMasteryServiceLayer serviceLayer;
+    private final FlooringMasteryView view;
+    private final FlooringMasteryServiceLayer serviceLayer;
 
     public FlooringMasteryController(FlooringMasteryServiceLayer serviceLayer,
             FlooringMasteryView view) {
@@ -63,7 +63,10 @@ public class FlooringMasteryController {
                         Order unconfirmedOrder = serviceLayer.getUnconfirmedOrder(date, orderInfo[0], orderInfo[1], orderInfo[2], area);
 
                         if (view.getConfirmation("Are you sure you want to add this order?", unconfirmedOrder)) {
-                            serviceLayer.addOrder(date, orderInfo[0], orderInfo[1], orderInfo[2], area);
+                            Order addedOrder = serviceLayer.addOrder(date, orderInfo[0], orderInfo[1], orderInfo[2], area);
+                            view.displayOrderAddedBanner(addedOrder);
+                        } else {
+                            view.displayOrderNotAdded();
                         }
 
                         break;
@@ -77,13 +80,10 @@ public class FlooringMasteryController {
                         break;
 
                     case 5:
-                    //exportData();
-
-                    case 6:
+                        view.displayExitBanner();
                         keepGoing = false;
                         break;
-                    default:
-                    //unknownCommand();
+
                 }
 
             } catch (FlooringMasteryPersistenceException e) {
@@ -129,6 +129,9 @@ public class FlooringMasteryController {
             if (view.getConfirmation("Are you sure you want to edit this order?", unconfirmedOrder)) {
                 serviceLayer.editOrder(date, editInfo[0], editInfo[1], editInfo[2], editedArea,
                         orderToEdit.getOrderNumber());
+                view.displayOrderEditedBanner(orderToEdit.getOrderNumber());
+            } else {
+                view.displayCancelEditOrder();
             }
 
         } catch (NoSavedOrdersException | OrderNonexistentException e) {
@@ -148,6 +151,9 @@ public class FlooringMasteryController {
             if (view.getConfirmation("Are you sure you want to remove this order?",
                     serviceLayer.getOrder(date, orderNumber))) {
                 serviceLayer.removeOrder(date, orderNumber);
+                view.displayRemoveOrderBanner(orderNumber);
+            } else {
+                view.displayCancelRemoveOrder();
             }
 
         } catch (NoSavedOrdersException | OrderNonexistentException e) {

@@ -11,15 +11,19 @@ import com.sg.flooringmasteryproject.dto.Tax;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author roysk93
  */
+@Component
 public class FlooringMasteryView {
-
+    
     private final UserIO io;
-
+    
+    @Autowired
     public FlooringMasteryView(UserIO io) {
         this.io = io;
     }

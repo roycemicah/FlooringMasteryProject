@@ -6,20 +6,9 @@
 package com.sg.flooringmasteryproject;
 
 import com.sg.flooringmasteryproject.controller.FlooringMasteryController;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryAuditDao;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryAuditDaoFileImpl;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryMaterialDao;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryMaterialDaoFileImpl;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDao;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImpl;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryPersistenceException;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryTaxDao;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryTaxDaoFileImpl;
-import com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayer;
-import com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImpl;
-import com.sg.flooringmasteryproject.ui.FlooringMasteryView;
-import com.sg.flooringmasteryproject.ui.UserIO;
-import com.sg.flooringmasteryproject.ui.UserIOConsoleImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -28,7 +17,22 @@ import com.sg.flooringmasteryproject.ui.UserIOConsoleImpl;
 public class App {
 
     public static void main(String[] args) throws FlooringMasteryPersistenceException {
-
+        
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        FlooringMasteryController controller = context.getBean("flooringMasteryController", 
+                FlooringMasteryController.class);
+        controller.run();
+        
+        /*
+        AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
+        appContext.scan("com.sg.flooringmasteryproject");
+        appContext.refresh();
+        
+        FlooringMasteryController controller = appContext.getBean("flooringMasteryController", 
+                FlooringMasteryController.class);
+        controller.run(); */
+        
+        /*
         UserIO io = new UserIOConsoleImpl();
         FlooringMasteryView view = new FlooringMasteryView(io);
         FlooringMasteryOrderDao orderData = new FlooringMasteryOrderDaoFileImpl();
@@ -37,7 +41,7 @@ public class App {
         FlooringMasteryAuditDao auditDao = new FlooringMasteryAuditDaoFileImpl();
         FlooringMasteryServiceLayer service = new FlooringMasteryServiceLayerFileImpl(orderData, materialData, taxData, auditDao);
         FlooringMasteryController controller = new FlooringMasteryController(service, view);
-        controller.run();
+        controller.run();*/
 
     }
 

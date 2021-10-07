@@ -19,15 +19,17 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author roysk93
  */
+@Component
 public class FlooringMasteryOrderDaoFileImpl implements FlooringMasteryOrderDao {
 
     private final String DELIMITER = "::";
-    private String filePrefix;
+    private final String filePrefix;
     private final List<Order> orderList = new ArrayList<>();
 
     public FlooringMasteryOrderDaoFileImpl(String filePrefix) {

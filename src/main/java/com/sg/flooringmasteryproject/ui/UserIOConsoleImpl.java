@@ -9,11 +9,13 @@ import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author roysk93
  */
+@Component
 public class UserIOConsoleImpl implements UserIO {
 
     final private Scanner sc = new Scanner(System.in);

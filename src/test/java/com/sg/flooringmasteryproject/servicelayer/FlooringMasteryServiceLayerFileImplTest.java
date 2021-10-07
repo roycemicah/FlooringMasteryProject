@@ -5,17 +5,15 @@
  */
 package com.sg.flooringmasteryproject.servicelayer;
 
-import com.sg.flooringmasteryproject.dao.FlooringMasteryAuditDao;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryMaterialDao;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDao;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryPersistenceException;
-import com.sg.flooringmasteryproject.dao.FlooringMasteryTaxDao;
 import com.sg.flooringmasteryproject.dto.Order;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -26,12 +24,18 @@ public class FlooringMasteryServiceLayerFileImplTest {
     private FlooringMasteryServiceLayer serviceLayer;
 
     public FlooringMasteryServiceLayerFileImplTest() {
+        
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContextTest.xml");
+        serviceLayer = context.getBean("flooringMasteryServiceLayer", FlooringMasteryServiceLayer.class);
+        
+        /*
         FlooringMasteryOrderDao orderDao = new FlooringMasteryOrderDaoStubImpl();
         FlooringMasteryMaterialDao materialDao = new FlooringMasteryMaterialDaoStubImpl();
         FlooringMasteryAuditDao auditDao = new FlooringMasteryAuditDaoStubImpl();
         FlooringMasteryTaxDao taxDao = new FlooringMasteryTaxDaoStubImpl();
 
         this.serviceLayer = new FlooringMasteryServiceLayerFileImpl(orderDao, materialDao, taxDao, auditDao);
+        */
     }
 
     @Test

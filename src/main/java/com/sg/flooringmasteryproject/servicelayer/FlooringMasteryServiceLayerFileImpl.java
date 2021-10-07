@@ -18,18 +18,22 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author roysk93
  */
+@Component
 public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServiceLayer {
 
     private final FlooringMasteryOrderDao orderDao;
     private final FlooringMasteryMaterialDao materialDao;
     private final FlooringMasteryTaxDao taxDao;
     private final FlooringMasteryAuditDao auditDao;
-
+    
+    @Autowired
     public FlooringMasteryServiceLayerFileImpl(FlooringMasteryOrderDao orderDao,
             FlooringMasteryMaterialDao materialDao, FlooringMasteryTaxDao taxDao,
             FlooringMasteryAuditDao auditDao) {

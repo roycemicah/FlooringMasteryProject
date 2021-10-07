@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author roysk93
  */
+@Component
 public class FlooringMasteryTaxDaoFileImpl implements FlooringMasteryTaxDao {
 
     private final String DELIMITER = ",";

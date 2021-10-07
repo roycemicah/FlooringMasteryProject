@@ -16,26 +16,22 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- *
- * @author roysk93
+ * FINAL COPY
+ * @author Royce Rabanal
+ * GitHub: https://github.com/roycemicah
+ * Email: royce.rabanal93@gmail.com
+ * Date: October 7th, 2021
+ * Purpose: TSG Flooring Mastery Project
  */
 public class FlooringMasteryServiceLayerFileImplTest {
 
-    private FlooringMasteryServiceLayer serviceLayer;
+    private final FlooringMasteryServiceLayer serviceLayer;
 
     public FlooringMasteryServiceLayerFileImplTest() {
         
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContextTest.xml");
         serviceLayer = context.getBean("flooringMasteryServiceLayer", FlooringMasteryServiceLayer.class);
-        
-        /*
-        FlooringMasteryOrderDao orderDao = new FlooringMasteryOrderDaoStubImpl();
-        FlooringMasteryMaterialDao materialDao = new FlooringMasteryMaterialDaoStubImpl();
-        FlooringMasteryAuditDao auditDao = new FlooringMasteryAuditDaoStubImpl();
-        FlooringMasteryTaxDao taxDao = new FlooringMasteryTaxDaoStubImpl();
 
-        this.serviceLayer = new FlooringMasteryServiceLayerFileImpl(orderDao, materialDao, taxDao, auditDao);
-        */
     }
 
     @Test
@@ -168,7 +164,7 @@ public class FlooringMasteryServiceLayerFileImplTest {
             Order shouldBeNull = serviceLayer.removeOrder(date, 17);
             fail("Removing 17 should be null.");
         } catch (OrderNonexistentException e) {
-            return;
+            
         }
 
     }

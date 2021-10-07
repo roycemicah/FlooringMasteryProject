@@ -12,8 +12,12 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 /**
- *
- * @author roysk93
+ * FINAL COPY
+ * @author Royce Rabanal
+ * GitHub: https://github.com/roycemicah
+ * Email: royce.rabanal93@gmail.com
+ * Date: October 7th, 2021
+ * Purpose: TSG Flooring Mastery Project
  */
 @Component
 public class FlooringMasteryAuditDaoFileImpl implements FlooringMasteryAuditDao {

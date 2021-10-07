@@ -10,14 +10,18 @@ import java.math.RoundingMode;
 import java.util.Objects;
 
 /**
- *
- * @author roysk93
+ * FINAL COPY
+ * @author Royce Rabanal
+ * GitHub: https://github.com/roycemicah
+ * Email: royce.rabanal93@gmail.com
+ * Date: October 7th, 2021
+ * Purpose: TSG Flooring Mastery Project
  */
 public class Material {
 
     private String productType;
-    private BigDecimal costPerSquareFoot;
-    private BigDecimal labourCostPerSquareFoot;
+    private final BigDecimal costPerSquareFoot;
+    private final BigDecimal labourCostPerSquareFoot;
 
     public Material(String productType, BigDecimal costPerSquareFoot, BigDecimal labourCostPerSquareFoot) {
 

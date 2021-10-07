@@ -11,8 +11,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- *
- * @author roysk93
+ * FINAL COPY
+ * @author Royce Rabanal
+ * GitHub: https://github.com/roycemicah
+ * Email: royce.rabanal93@gmail.com
+ * Date: October 7th, 2021
+ * Purpose: TSG Flooring Mastery Project
  */
 public class App {
 
@@ -22,26 +26,6 @@ public class App {
         FlooringMasteryController controller = context.getBean("flooringMasteryController", 
                 FlooringMasteryController.class);
         controller.run();
-        
-        /*
-        AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
-        appContext.scan("com.sg.flooringmasteryproject");
-        appContext.refresh();
-        
-        FlooringMasteryController controller = appContext.getBean("flooringMasteryController", 
-                FlooringMasteryController.class);
-        controller.run(); */
-        
-        /*
-        UserIO io = new UserIOConsoleImpl();
-        FlooringMasteryView view = new FlooringMasteryView(io);
-        FlooringMasteryOrderDao orderData = new FlooringMasteryOrderDaoFileImpl();
-        FlooringMasteryTaxDao taxData = new FlooringMasteryTaxDaoFileImpl();
-        FlooringMasteryMaterialDao materialData = new FlooringMasteryMaterialDaoFileImpl();
-        FlooringMasteryAuditDao auditDao = new FlooringMasteryAuditDaoFileImpl();
-        FlooringMasteryServiceLayer service = new FlooringMasteryServiceLayerFileImpl(orderData, materialData, taxData, auditDao);
-        FlooringMasteryController controller = new FlooringMasteryController(service, view);
-        controller.run();*/
 
     }
 

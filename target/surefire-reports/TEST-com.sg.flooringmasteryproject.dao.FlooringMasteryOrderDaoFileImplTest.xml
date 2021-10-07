@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.412" tests="4" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.268" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="java.vm.version" value="11.0.11+9"/>
@@ -64,8 +64,8 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="testAddEditOrder" classname="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.274"/>
-  <testcase name="testRemoveOrder" classname="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.056"/>
-  <testcase name="testAddGetOrder" classname="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.015"/>
-  <testcase name="testGetAllOrders" classname="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.059"/>
+  <testcase name="testAddEditOrder" classname="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.202"/>
+  <testcase name="testRemoveOrder" classname="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.025"/>
+  <testcase name="testAddGetOrder" classname="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.005"/>
+  <testcase name="testGetAllOrders" classname="com.sg.flooringmasteryproject.dao.FlooringMasteryOrderDaoFileImplTest" time="0.015"/>
 </testsuite>

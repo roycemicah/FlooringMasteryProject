@@ -9,8 +9,12 @@ import com.sg.flooringmasteryproject.dao.FlooringMasteryAuditDao;
 import com.sg.flooringmasteryproject.dao.FlooringMasteryPersistenceException;
 
 /**
- *
- * @author roysk93
+ * FINAL COPY
+ * @author Royce Rabanal
+ * GitHub: https://github.com/roycemicah
+ * Email: royce.rabanal93@gmail.com
+ * Date: October 7th, 2021
+ * Purpose: TSG Flooring Mastery Project
  */
 public class FlooringMasteryAuditDaoStubImpl implements FlooringMasteryAuditDao {
 

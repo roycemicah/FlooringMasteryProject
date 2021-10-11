@@ -21,18 +21,17 @@ import org.springframework.stereotype.Component;
 
 /**
  * FINAL COPY
- * @author Royce Rabanal
- * GitHub: https://github.com/roycemicah
- * Email: royce.rabanal93@gmail.com
- * Date: October 7th, 2021
- * Purpose: TSG Flooring Mastery Project
+ *
+ * @author Royce Rabanal GitHub: https://github.com/roycemicah Email:
+ * royce.rabanal93@gmail.com Date: October 7th, 2021 Purpose: TSG Flooring
+ * Mastery Project
  */
 @Component
 public class FlooringMasteryController {
 
     private final FlooringMasteryView view;
     private final FlooringMasteryServiceLayer serviceLayer;
-    
+
     @Autowired
     public FlooringMasteryController(FlooringMasteryServiceLayer serviceLayer,
             FlooringMasteryView view) {
@@ -61,22 +60,7 @@ public class FlooringMasteryController {
                         break;
 
                     case 2:
-
-                        date = view.getFutureDate("Enter date to add order: ");
-
-                        String[] orderInfo = view.getNewOrderInfo(materials, states);
-
-                        BigDecimal area = view.getArea("Enter square ft greater than 100: ");
-
-                        Order unconfirmedOrder = serviceLayer.getUnconfirmedOrder(date, orderInfo[0], orderInfo[1], orderInfo[2], area);
-
-                        if (view.getConfirmation("Are you sure you want to add this order?", unconfirmedOrder)) {
-                            Order addedOrder = serviceLayer.addOrder(date, orderInfo[0], orderInfo[1], orderInfo[2], area);
-                            view.displayOrderAddedBanner(addedOrder);
-                        } else {
-                            view.displayOrderNotAdded();
-                        }
-
+                        addOrder(materials, states);
                         break;
 
                     case 3:
@@ -116,6 +100,24 @@ public class FlooringMasteryController {
             view.displayErrorMessage(e.getMessage());
         }
 
+    }
+
+    private void addOrder(List<Material> materials, List<Tax> states) throws FlooringMasteryPersistenceException {
+
+        LocalDate date = view.getFutureDate("Enter date to add order: ");
+
+        String[] orderInfo = view.getNewOrderInfo(materials, states);
+
+        BigDecimal area = view.getArea("Enter square ft greater than 100: ");
+
+        Order unconfirmedOrder = serviceLayer.getUnconfirmedOrder(date, orderInfo[0], orderInfo[1], orderInfo[2], area);
+
+        if (view.getConfirmation("Are you sure you want to add this order?", unconfirmedOrder)) {
+            Order addedOrder = serviceLayer.addOrder(date, orderInfo[0], orderInfo[1], orderInfo[2], area);
+            view.displayOrderAddedBanner(addedOrder);
+        } else {
+            view.displayOrderNotAdded();
+        }
     }
 
     private void editOrder(List<Material> materials, List<Tax> states) throws FlooringMasteryPersistenceException {

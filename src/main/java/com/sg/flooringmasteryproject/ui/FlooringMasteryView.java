@@ -121,7 +121,7 @@ public class FlooringMasteryView {
 
     public String[] getNewOrderInfo(List<Material> materials, List<Tax> states) {
 
-        String userName = getValidName();
+        String userName = getValidNameToAdd();
 
         displayStates(states);
         String stateAbbr = null;
@@ -153,12 +153,24 @@ public class FlooringMasteryView {
         return resultArray;
 
     }
-
-    private String getValidName() {
+    
+    private String getValidNameToAdd() {
 
         String name = io.readString("Enter name: ");
+        
+        while (!name.matches("^[A-Za-z0-9,. ]+$")) {
+            name = io.readString("Enter a valid name: ");
+        }
 
-        while (!name.matches("^[A-Za-z0-9,.]+$")) {
+        return name;
+
+    }
+    
+    private String getValidNameToEdit() {
+
+        String name = io.readString("Enter name: ");
+        
+        while (! (name.matches("^[A-Za-z0-9,. ]+$") || name.isBlank())) {
             name = io.readString("Enter a valid name: ");
         }
 
@@ -170,9 +182,10 @@ public class FlooringMasteryView {
             List<Tax> states) {
 
         io.print("Current name: " + orderToEdit.getCustomerName());
-        String userName = getValidName();
-
-        if (userName.isBlank()) {
+        
+        String userName = getValidNameToEdit();
+        
+        if(userName.isBlank()) {
             userName = orderToEdit.getCustomerName();
         }
 

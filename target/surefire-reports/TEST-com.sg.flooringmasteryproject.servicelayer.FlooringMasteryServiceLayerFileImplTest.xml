@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="1.912" tests="5" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="2.781" tests="5" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="java.vm.version" value="11.0.11+9"/>
@@ -64,9 +64,9 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="editOrder" classname="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="0.093"/>
-  <testcase name="getAllOrders" classname="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="0.009"/>
-  <testcase name="testAddOrder" classname="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="0.013"/>
-  <testcase name="removeOrder" classname="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="0.002"/>
+  <testcase name="editOrder" classname="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="0.095"/>
+  <testcase name="getAllOrders" classname="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="0.004"/>
+  <testcase name="testAddOrder" classname="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="0.032"/>
+  <testcase name="removeOrder" classname="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="0.003"/>
   <testcase name="getOrder" classname="com.sg.flooringmasteryproject.servicelayer.FlooringMasteryServiceLayerFileImplTest" time="0.001"/>
 </testsuite>

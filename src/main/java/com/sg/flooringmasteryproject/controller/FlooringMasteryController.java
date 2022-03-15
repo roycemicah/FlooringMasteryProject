@@ -133,6 +133,7 @@ public class FlooringMasteryController {
             BigDecimal editedArea = view.getEditedArea(orderToEdit.getArea());
 
             String[] editInfo = view.getEditedOrderInfo(orderToEdit, materials, states);
+            
             Order unconfirmedOrder = serviceLayer.getUnconfirmedOrder(date, editInfo[0], editInfo[1], editInfo[2], editedArea,
                     orderToEdit.getOrderNumber());
 

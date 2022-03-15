@@ -281,6 +281,31 @@ public class FlooringMasteryView {
     public BigDecimal getEditedArea(BigDecimal area) {
 
         io.print("Current area: " + area);
+        String areaString;
+        BigDecimal editedArea = new BigDecimal("0");
+        
+        boolean isNotValid = true;
+        
+        while(isNotValid) {
+            areaString = io.readString("Enter new area that is 100 sq ft or greater: ");
+            
+            if(areaString.isBlank()) {
+                return area;
+            } 
+            
+            try {
+                editedArea = new BigDecimal(areaString);
+                
+                if(area.compareTo(new BigDecimal("100")) >= 0) {
+                    isNotValid = false;
+                } else {
+                    io.print("Enter a valid area that is 100 sq ft or greater: ");
+                }
+                
+            } catch(NumberFormatException e) {
+                io.print("Area is not valid!");
+            }
+        }
 
         return getArea("Enter new area that is 100 sq ft or greater: ");
 

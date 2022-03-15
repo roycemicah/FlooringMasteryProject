@@ -4,8 +4,8 @@ com/sg/flooringmasteryproject/dto/Tax.class
 com/sg/flooringmasteryproject/dao/FlooringMasteryMaterialDaoFileImpl.class
 com/sg/flooringmasteryproject/dao/FlooringMasteryPersistenceException.class
 com/sg/flooringmasteryproject/dao/FlooringMasteryAuditDaoFileImpl.class
-com/sg/flooringmasteryproject/servicelayer/FlooringMasteryServiceLayerFileImpl.class
 com/sg/flooringmasteryproject/ui/FlooringMasteryView.class
+com/sg/flooringmasteryproject/servicelayer/FlooringMasteryServiceLayerFileImpl.class
 com/sg/flooringmasteryproject/dto/Order.class
 com/sg/flooringmasteryproject/servicelayer/OrderNonexistentException.class
 com/sg/flooringmasteryproject/dao/FlooringMasteryOrderDao.class
@@ -13,8 +13,8 @@ com/sg/flooringmasteryproject/dao/FlooringMasteryAuditDao.class
 com/sg/flooringmasteryproject/dao/FlooringMasteryOrderDaoFileImpl.class
 com/sg/flooringmasteryproject/dao/FlooringMasteryTaxDao.class
 com/sg/flooringmasteryproject/dto/Material.class
-com/sg/flooringmasteryproject/servicelayer/FlooringMasteryServiceLayer.class
 com/sg/flooringmasteryproject/ui/UserIOConsoleImpl.class
+com/sg/flooringmasteryproject/servicelayer/FlooringMasteryServiceLayer.class
 com/sg/flooringmasteryproject/controller/FlooringMasteryController.class
 com/sg/flooringmasteryproject/servicelayer/NoSavedOrdersException.class
 com/sg/flooringmasteryproject/dao/FlooringMasteryTaxDaoFileImpl.class
